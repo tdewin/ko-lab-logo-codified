@@ -1,5 +1,7 @@
-logo = "kolab"
-multiline_str = """
+import bpy
+
+logos = {
+ "kolab":"""
 10010001110
 10100010001
 11000010001
@@ -11,61 +13,72 @@ multiline_str = """
 10001110110
 10001010101
 11101010110
+""",
+ "10":"""
+01000110
+01001001
+01001001
+01001001
+01000110
 """
-
-import bpy
-
-# 1. Create the new collection in data
-kollection = bpy.data.collections.new(logo)
-bpy.context.scene.collection.children.link(kollection)
-bpy.context.view_layer.active_layer_collection = (
-    bpy.context.view_layer.layer_collection.children[kollection.name]
-)
+}
 
 
-# Split into lines and strip whitespace from each line
-lines = [line.strip() for line in multiline_str.strip().splitlines()]
+
+for logo in logos:
+    multiline_str = logos[logo]
+
+    # 1. Create the new collection in data
+    kollection = bpy.data.collections.new(logo)
+    bpy.context.scene.collection.children.link(kollection)
+    bpy.context.view_layer.active_layer_collection = (
+        bpy.context.view_layer.layer_collection.children[kollection.name]
+    )
 
 
-div=50
-wid=10/div
-ht=10/div
-gap=2/div
+    # Split into lines and strip whitespace from each line
+    lines = [line.strip() for line in multiline_str.strip().splitlines()]
 
-xwid = len(lines[0])
-yht = len(lines)
 
-totwidth = (xwid)*(wid+gap)-gap
-totheight = (yht)*(ht+gap)-gap
+    div=200
+    wid=10/div
+    ht=10/div
+    gap=2/div
 
-print(xwid,yht,totwidth,totheight)
+    xwid = len(lines[0])
+    yht = len(lines)
 
-planes = []
+    totwidth = (xwid)*(wid+gap)-gap
+    totheight = (yht)*(ht+gap)-gap
 
-for y in range(len(lines)):
- line = lines[y]
- for x in range(len(line)):
-  char = line[x]
-  if char == "1":
-    # plane is 2d/cube is 3d
-    #planes.append(bpy.ops.mesh.primitive_plane_add(size=wid, location=((wid+gap)*x, (ht+gap)*-y, 0)))
-    bpy.ops.mesh.primitive_cube_add(size=wid, location=((wid+gap)*x, (ht+gap)*-y, 0))
-  else:
-    print(' ',end="")
- print()
+    print(xwid,yht,totwidth,totheight)n
 
-bpy.ops.object.select_all(action="DESELECT")
-#kollection = bpy.data.collections['kolab']
+    planes = []
 
-for plane in kollection.objects:
-    plane.select_set(True)
+    for y in range(len(lines)):
+     line = lines[y]
+     for x in range(len(line)):
+      char = line[x]
+      if char == "1":
+        # plane is 2d/cube is 3d
+        #planes.append(bpy.ops.mesh.primitive_plane_add(size=wid, location=((wid+gap)*x, (ht+gap)*-y, 0)))
+        bpy.ops.mesh.primitive_cube_add(size=wid,scale=(1,1,0.2),location=((wid+gap)*x, (ht+gap)*-y, 0))
+      else:
+        print(' ',end="")
+     print()
 
-bpy.ops.object.join()
-bpy.context.active_object.name = f"{logo}-logo"
-bpy.context.scene.cursor.location[0] = totwidth/2
-bpy.context.scene.cursor.location[1] = -totheight/2
-bpy.context.scene.cursor.location[2] = 0
+    bpy.ops.object.select_all(action="DESELECT")
+    #kollection = bpy.data.collections['kolab']
 
-bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
+    for plane in kollection.objects:
+        plane.select_set(True)
+
+    bpy.ops.object.join()
+    bpy.context.active_object.name = f"{logo}-logo"
+    bpy.context.scene.cursor.location[0] = totwidth/2
+    bpy.context.scene.cursor.location[1] = -totheight/2
+    bpy.context.scene.cursor.location[2] = 0
+
+    bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
 
 
