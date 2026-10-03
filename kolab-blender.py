@@ -27,7 +27,7 @@ bpy.context.view_layer.active_layer_collection = (
 lines = [line.strip() for line in multiline_str.strip().splitlines()]
 
 
-div=10
+div=50
 wid=10/div
 ht=10/div
 gap=2/div
@@ -47,7 +47,9 @@ for y in range(len(lines)):
  for x in range(len(line)):
   char = line[x]
   if char == "1":
-    planes.append(bpy.ops.mesh.primitive_plane_add(size=wid, location=((wid+gap)*x, (ht+gap)*-y, 0)))
+    # plane is 2d/cube is 3d
+    #planes.append(bpy.ops.mesh.primitive_plane_add(size=wid, location=((wid+gap)*x, (ht+gap)*-y, 0)))
+    bpy.ops.mesh.primitive_cube_add(size=wid, location=((wid+gap)*x, (ht+gap)*-y, 0))
   else:
     print(' ',end="")
  print()
@@ -62,7 +64,7 @@ bpy.ops.object.join()
 bpy.context.active_object.name = f"{logo}-logo"
 bpy.context.scene.cursor.location[0] = totwidth/2
 bpy.context.scene.cursor.location[1] = -totheight/2
-bpy.context.scene.cursor.location[2] = 0 
+bpy.context.scene.cursor.location[2] = 0
 
 bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
 
