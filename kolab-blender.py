@@ -52,7 +52,6 @@ for logo in logos:
     totheight = (yht)*(ht+gap)-gap
 
     print(xwid,yht,totwidth,totheight)
-
     planes = []
 
     for y in range(len(lines)):
